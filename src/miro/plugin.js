@@ -23,6 +23,7 @@ miro.onReady(() => {
   miro.isAuthorized().then((isAuthorized) => {
     if (isAuthorized) {
       console.log('Web plugin authorized');
+      console.log(miro.user.name);
       Promise.resolve()
     } else {
       console.log('Web plugin unauthorized!');
