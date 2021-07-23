@@ -21,7 +21,7 @@ function startApp(nickname, channel) {
 
 miro.onReady(() => {
   miro.isAuthorized().then((isAuthorized) => {
-    if (!isAuthorized) {
+    if (isAuthorized) {
       console.log('Web plugin authorized');
       Promise.resolve()
     } else {
