@@ -20,23 +20,33 @@ function startApp(nickname, channel) {
 }
 
 miro.onReady(() => {
-  // Attempt to get current user name (dice roller nickname)
-  miro.currentUser.getId()
-    .then((id) => {
-      fetch('https://miro.com/api/v1/users/' + id)
-        .then(response => response.json())
-        .then(data => {
-          // Attempt to get team account id (dice roller channel)
-          miro.account.get()
-            .then((account) => {
-              startApp(data.name, 'miro' + account.id)
-            })
-            .catch(e => {
-              console.log('[Dice Roller] Failed to get team account id', e)
-            })
-        })
-        .catch(e => {
-          console.log('[Dice Roller] Failed to get current user nickname', e)
-        })
-    })
+  miro.isAuthorized().then((isAuthorized) => {
+    if (!isAuthorized) {
+      console.log('Web plugin authorized');
+      Promise.resolve()
+    } else {
+      console.log('Web plugin unauthorized!');
+      miro.requestAuthorization()
+    }
+  }).then(() => {
+    // Attempt to get current user name (dice roller nickname)
+    miro.currentUser.getId()
+      .then((id) => {
+        fetch('https://miro.com/api/v1/users/' + id)
+          .then(response => response.json())
+          .then(data => {
+            // Attempt to get team account id (dice roller channel)
+            miro.account.get()
+              .then((account) => {
+                startApp(data.name, 'miro' + account.id)
+              })
+              .catch(e => {
+                console.log('[Dice Roller] Failed to get team account id', e)
+              })
+          })
+          .catch(e => {
+            console.log('[Dice Roller] Failed to get current user nickname', e)
+          })
+      })
+  })
 })
