@@ -20,25 +20,17 @@ function startApp(nickname, channel) {
 }
 
 miro.onReady(() => {
-  miro.isAuthorized().then((isAuthorized) => {
-    if (isAuthorized) {
-      Promise.resolve()
-    } else {
-      miro.requestAuthorization()
-    }
-  }).then(() => {
-    // Attempt to get current user name (dice roller nickname)
-    miro.board.getInfo().then((boardInfo) => {
-      // Attempt to get team account id (dice roller channel)
-      miro.account.get().then((account) => {
-        startApp(boardInfo.currentUserContext.user.name, 'miro' + account.id)
-      })
-      .catch(e => {
-        console.log('[Dice Roller] Failed to get team account id', e)
-      })
+  // Attempt to get current user name (dice roller nickname)
+  miro.board.getInfo().then((boardInfo) => {
+    // Attempt to get team account id (dice roller channel)
+    miro.account.get().then((account) => {
+      startApp(boardInfo.currentUserContext.user.name, 'miro' + account.id)
     })
     .catch(e => {
-      console.log('[Dice Roller] Failed to get board info', e)
+      console.log('[Dice Roller] Failed to get team account id', e)
     })
+  })
+  .catch(e => {
+    console.log('[Dice Roller] Failed to get board info', e)
   })
 })
